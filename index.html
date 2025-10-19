@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House of Cha Cha - House Selection</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Text:ital@0;1&family=Inter:wght@200;300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gold: #c9a961;
+            --bright-gold: #f4e4d4;
+            --dim-gold: #8b7355;
+            --blood-red: #8b0000;
+            --crimson: #dc143c;
+            --deep-black: #0a0a0a;
+            --card-black: #0f0f0f;
+            --border-color: #2a2a2a;
+            --text-primary: #f4e4d4;
+            --text-secondary: #a09080;
+            --silver: #c0c0c0;
+            --bright-silver: #e8e8e8;
+            --dim-silver: #808080;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(139, 0, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(201, 169, 97, 0.05) 0%, transparent 50%),
+                linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
+            z-index: -2;
+        }
+
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.02;
+            z-index: -1;
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 1px,
+                    rgba(255, 255, 255, 0.03) 1px,
+                    rgba(255, 255, 255, 0.03) 2px
+                );
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: revealDown 1s ease;
+        }
+
+        .logo-container {
+            display: inline-block;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .logo-img {
+            width: 200px;
+    max-width: 100%; /* This line makes it responsive */
+    height: auto;
+    animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.8em;
+            font-weight: 400;
+            background: linear-gradient(135deg, var(--bright-gold) 0%, var(--primary-gold) 50%, var(--dim-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .header .tagline {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.3em;
+            color: var(--text-secondary);
+            font-style: italic;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .divider {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
+            margin: 30px auto;
+        }
+
+        .quiz-container {
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            padding: 60px 50px;
+            position: relative;
+            animation: revealUp 1s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.8),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
+            opacity: 0.5;
+        }
+
+        .quiz-container::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
+            opacity: 0.5;
+        }
+
+        .corner-accent {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--primary-gold);
+            opacity: 0.5;
+        }
+
+        .corner-accent.top-left { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+        .corner-accent.top-right { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+        .corner-accent.bottom-left { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+        .corner-accent.bottom-right { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+        .start-screen {
+            text-align: center;
+            animation: fadeIn 1s ease;
+        }
+
+        .start-screen h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 2em;
+            color: var(--primary-gold);
+            margin-bottom: 30px;
+            font-weight: 400;
+            letter-spacing: 3px;
+        }
+
+        .start-screen .intro-text {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        .houses-preview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .house-card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .house-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .house-card:hover::before { left: 100%; }
+        .house-card:hover { transform: translateY(-5px); border-color: var(--primary-gold); }
+        .house-card h3 { font-family: 'Cinzel', serif; font-size: 1.1em; margin-bottom: 10px; letter-spacing: 1px; }
+        .house-card.carmine h3 { color: #dc143c; }
+        .house-card.dorada h3 { color: var(--primary-gold); }
+        .house-card.eclipse h3 { color: var(--silver); text-shadow: 0 0 10px var(--bright-silver); }
+        .house-card p { font-family: 'Crimson Text', serif; font-size: 0.95em; color: var(--text-secondary); font-style: italic; }
+
+        /* Registration Screen */
+        .registration-screen {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .registration-screen h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 2em;
+            color: var(--primary-gold);
+            margin-bottom: 20px;
+            font-weight: 400;
+            letter-spacing: 3px;
+        }
+
+        .registration-screen p {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        .input-group {
+            margin: 30px auto;
+            max-width: 400px;
+        }
+
+        .input-group label {
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9em;
+            color: var(--primary-gold);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 15px 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1em;
+            text-align: center;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 20px rgba(201, 169, 97, 0.2);
+        }
+
+        .error-message {
+            color: var(--crimson);
+            font-size: 0.9em;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--deep-black) 0%, #1a1a1a 100%);
+            color: var(--primary-gold);
+            border: 1px solid var(--primary-gold);
+            padding: 18px 50px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.95em;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, var(--primary-gold) 0%, transparent 70%);
+            transition: width 0.6s ease, height 0.6s ease;
+            transform: translate(-50%, -50%);
+            opacity: 0.3;
+        }
+
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201, 169, 97, 0.2); }
+        .btn:hover::before { width: 300px; height: 300px; }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            color: var(--text-secondary);
+            border-color: var(--border-color);
+            background: var(--card-black);
+        }
+
+        .question-screen { display: none; animation: fadeIn 0.6s ease; }
+        .progress-container { margin-bottom: 40px; }
+        .progress-bar { height: 2px; background: rgba(255, 255, 255, 0.1); position: relative; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--blood-red) 0%, var(--primary-gold) 100%); transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); width: 0%; box-shadow: 0 0 10px rgba(201, 169, 97, 0.5); }
+        .question-number { text-align: center; color: var(--text-secondary); font-size: 0.85em; margin-top: 15px; text-transform: uppercase; letter-spacing: 3px; font-weight: 300; }
+        .question { font-family: 'Crimson Text', serif; font-size: 1.6em; margin: 40px 0; line-height: 1.6; color: var(--text-primary); text-align: center; }
+        .options { display: flex; flex-direction: column; gap: 20px; margin-top: 40px; }
+        .option { background: rgba(10, 10, 10, 0.6); border: 1px solid var(--border-color); padding: 25px 30px; cursor: pointer; transition: all 0.3s ease; color: var(--text-secondary); font-size: 1.05em; line-height: 1.6; position: relative; font-weight: 300; }
+        .option::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--primary-gold); transform: scaleY(0); transition: transform 0.3s ease; }
+        .option:hover { background: rgba(201, 169, 97, 0.05); border-color: var(--primary-gold); color: var(--text-primary); padding-left: 40px; }
+        .option:hover::before { transform: scaleY(1); }
+
+        /* Participation Question Styles */
+        .participation-question {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .participation-question h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2em;
+            color: var(--primary-gold);
+            margin-bottom: 30px;
+            font-weight: 400;
+            letter-spacing: 3px;
+        }
+
+        .participation-question p {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.3em;
+            color: var(--text-secondary);
+            margin-bottom: 50px;
+            line-height: 1.8;
+        }
+
+        .yes-no-buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .yes-no-btn {
+            background: rgba(10, 10, 10, 0.8);
+            border: 2px solid;
+            padding: 30px 60px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.2em;
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            min-width: 200px;
+        }
+
+        .yes-no-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            transition: width 0.6s ease, height 0.6s ease;
+            transform: translate(-50%, -50%);
+            opacity: 0.2;
+        }
+
+        .yes-btn {
+            border-color: #4CAF50;
+            color: #4CAF50;
+        }
+
+        .yes-btn::before {
+            background: radial-gradient(circle, #4CAF50 0%, transparent 70%);
+        }
+
+        .yes-btn:hover {
+            background: rgba(76, 175, 80, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+        }
+
+        .no-btn {
+            border-color: var(--crimson);
+            color: var(--crimson);
+        }
+
+        .no-btn::before {
+            background: radial-gradient(circle, var(--crimson) 0%, transparent 70%);
+        }
+
+        .no-btn:hover {
+            background: rgba(220, 20, 60, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(220, 20, 60, 0.3);
+        }
+
+        .yes-no-btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        /* Result Screen */
+        .result-screen {
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            flex-wrap: wrap;
+            text-align: center;
+            animation: fadeIn 1s ease;
+            transition: all 0.5s ease;
+        }
+
+        .house-result {
+            order: 2;
+            max-width: 600px;
+            flex: 1 1 500px;
+        }
+
+        .photo-strip {
+            order: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 180px;
+            flex-shrink: 0;
+            margin-top: 40px;
+        }
+
+        .photo-strip.right { order: 3; }
+
+        .photo-strip img {
+            width: 100%;
+            height: auto;
+            border: 5px solid #1a1a1a;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            filter: sepia(0.2) contrast(1.1);
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .photo-strip img:hover {
+            transform: scale(1.05) rotate(1deg);
+            filter: sepia(0) contrast(1);
+        }
+
+        .mobile-photo-grid {
+            display: none;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .mobile-photo-grid img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 3/4;
+            object-fit: cover;
+            border: 3px solid #1a1a1a;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            filter: sepia(0.2) contrast(1.1);
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .mobile-photo-grid img:hover {
+            transform: scale(1.05);
+            filter: sepia(0) contrast(1);
+        }
+
+        .result-screen > .btn {
+            order: 4;
+            flex-basis: 100%;
+            margin-top: 40px;
+        }
+
+        .result-screen.carmine-theme { animation: carmineReveal 1.5s ease; }
+        .result-screen.carmine-theme .quiz-container { border-color: var(--crimson); box-shadow: 0 20px 60px rgba(220, 20, 60, 0.3), inset 0 1px 0 rgba(220, 20, 60, 0.1); }
+        @keyframes carmineReveal { 0% { opacity: 0; filter: saturate(0); } 50% { filter: saturate(2) hue-rotate(-10deg); } 100% { opacity: 1; filter: saturate(1); } }
+
+        .result-screen.dorada-theme { animation: doradaReveal 1.5s ease; }
+        .result-screen.dorada-theme .quiz-container { border-color: var(--primary-gold); box-shadow: 0 20px 60px rgba(201, 169, 97, 0.3), inset 0 1px 0 rgba(201, 169, 97, 0.1); }
+        @keyframes doradaReveal { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+
+        .result-screen.eclipse-theme { animation: eclipseReveal 1.5s ease; }
+        .result-screen.eclipse-theme .quiz-container { border-color: var(--silver); box-shadow: 0 20px 60px rgba(192, 192, 192, 0.2), inset 0 1px 0 rgba(192, 192, 192, 0.1); background: rgba(5, 5, 5, 0.9); }
+        @keyframes eclipseReveal { 0% { opacity: 0; filter: brightness(0); } 50% { filter: brightness(1.5); } 100% { opacity: 1; filter: brightness(1); } }
+
+        .house-reveal { font-family: 'Crimson Text', serif; font-size: 1.2em; color: var(--text-secondary); margin-bottom: 30px; text-transform: uppercase; letter-spacing: 3px; }
+        .house-name { font-family: 'Cinzel', serif; font-size: 3.5em; margin-bottom: 20px; font-weight: 600; letter-spacing: 4px; animation: glow 2s ease-in-out infinite alternate; }
+        @keyframes glow { from { opacity: 0.8; } to { opacity: 1; } }
+
+        .carmine { background: linear-gradient(135deg, #dc143c 0%, #8b0000 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .dorada { background: linear-gradient(135deg, var(--bright-gold) 0%, var(--primary-gold) 50%, var(--dim-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .eclipse { background: linear-gradient(135deg, var(--bright-silver) 0%, var(--silver) 50%, var(--dim-silver) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 20px rgba(192, 192, 192, 0.5), 0 0 40px rgba(192, 192, 192, 0.3); }
+
+        .house-motto { font-family: 'Crimson Text', serif; font-style: italic; font-size: 1.5em; margin-bottom: 30px; opacity: 0.9; letter-spacing: 2px; }
+        .house-description { background: rgba(0, 0, 0, 0.5); padding: 40px; border: 1px solid var(--border-color); margin: 30px 0; line-height: 1.8; font-size: 1.1em; text-align: left; font-weight: 300; position: relative; }
+        .carmine-theme .house-description { border-color: var(--crimson); background: rgba(139, 0, 0, 0.1); }
+        .dorada-theme .house-description { border-color: var(--primary-gold); background: rgba(201, 169, 97, 0.05); }
+        .eclipse-theme .house-description { border-color: var(--silver); background: rgba(192, 192, 192, 0.05); }
+
+        .house-description::before, .house-description::after { content: '"'; position: absolute; font-family: 'Cinzel', serif; font-size: 3em; opacity: 0.1; }
+        .carmine-theme .house-description::before, .carmine-theme .house-description::after { color: var(--crimson); }
+        .dorada-theme .house-description::before, .dorada-theme .house-description::after { color: var(--primary-gold); }
+        .eclipse-theme .house-description::before, .eclipse-theme .house-description::after { color: var(--silver); }
+        .house-description::before { top: 10px; left: 20px; }
+        .house-description::after { bottom: 10px; right: 20px; }
+
+        .house-traits { display: flex; justify-content: center; gap: 20px; margin: 40px 0; flex-wrap: wrap; }
+        .trait { background: transparent; padding: 12px 25px; border: 1px solid; font-size: 0.9em; text-transform: uppercase; letter-spacing: 2px; font-weight: 400; position: relative; overflow: hidden; }
+        .carmine-theme .trait { border-color: var(--crimson); color: var(--crimson); }
+        .dorada-theme .trait { border-color: var(--primary-gold); color: var(--primary-gold); }
+        .eclipse-theme .trait { border-color: var(--silver); color: var(--silver); }
+        .trait::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; opacity: 0.1; transition: left 0.4s ease; }
+        .carmine-theme .trait::before { background: var(--crimson); }
+        .dorada-theme .trait::before { background: var(--primary-gold); }
+        .eclipse-theme .trait::before { background: var(--silver); }
+        .trait:hover::before { left: 0; }
+
+        .status-message {
+            font-family: 'Crimson Text', serif;
+            font-size: 1em;
+            color: var(--primary-gold);
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        @keyframes revealUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes revealDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 1100px) {
+            .photo-strip { display: none; }
+            .mobile-photo-grid { display: grid; }
+            .result-screen { flex-direction: column; align-items: center; }
+            .house-result { order: 1; display: flex; flex-direction: column; align-items: center; }
+            .result-screen > .btn { order: 2; }
+        }
+
+        @media (max-width: 768px) {
+            .houses-preview { grid-template-columns: 1fr; }
+            .header h1 { font-size: 2em; letter-spacing: 4px; }
+            .quiz-container { padding: 40px 30px; }
+            .house-name { font-size: 2.5em; }
+            .house-description { padding: 25px; font-size: 1em; }
+            .house-traits { gap: 10px; }
+            .trait { padding: 10px 20px; font-size: 0.85em; }
+            .yes-no-buttons { flex-direction: column; gap: 20px; }
+            .yes-no-btn { min-width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 { font-size: 1.6em; letter-spacing: 3px; }
+            .house-name { font-size: 2em; letter-spacing: 2px; }
+            .house-motto { font-size: 1.2em; }
+            .quiz-container { padding: 30px 20px; }
+            .mobile-photo-grid { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="IMG_3588.png" alt="Kpop Cha Cha Logo" class="logo-img">
+            </div>
+            <h1>House of Cha Cha</h1>
+            <div class="divider"></div>
+        </div>
+        
+        <div class="quiz-container" id="quizContainer">
+            <div class="corner-accent top-left"></div>
+            <div class="corner-accent top-right"></div>
+            <div class="corner-accent bottom-left"></div>
+            <div class="corner-accent bottom-right"></div>
+
+            <div class="start-screen" id="startScreen">
+                <h2>Three Houses rule the House of Cha Cha</h2>
+                <p class="intro-text">The House of Cha Cha awaits. Your responses will determine your rightful place among the three legendary houses.</p>
+                
+                <div class="houses-preview">
+                    <div class="house-card carmine">
+                        <h3>The Carmine Circle</h3>
+                        <p>Seize. Conquer. Reign.</p>
+                    </div>
+                    <div class="house-card dorada">
+                        <h3>La Familia Dorada</h3>
+                        <p>In Golden Faith We Remain</p>
+                    </div>
+                    <div class="house-card eclipse">
+                        <h3>The Eclipse Crew</h3>
+                        <p>Walk in Darkness</p>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="showRegistration()">Begin Assessment</button>
+            </div>
+
+            <div class="registration-screen" id="registrationScreen">
+                <h2>Enter Your Identity</h2>
+                <p>Before we begin, we need to know who you are</p>
+                
+                <div class="input-group">
+                    <label for="regNumber">Registration Number</label>
+                    <input type="text" id="regNumber" placeholder="Enter your registration number" autocomplete="off">
+                    <div class="error-message" id="errorMessage">Please enter a valid registration number</div>
+                </div>
+
+                <button class="btn" id="continueBtn" onclick="startQuiz()">Continue to Assessment</button>
+            </div>
+
+            <div class="question-screen" id="questionScreen">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar"></div>
+                    </div>
+                    <div class="question-number" id="questionNumber">Question I of X</div>
+                </div>
+                <div class="question" id="questionText"></div>
+                <div class="options" id="optionsContainer"></div>
+            </div>
+
+            <div class="participation-question" id="participationScreen">
+                <h2>Final Question</h2>
+                <p>The mafia game will involve socializing and interacting with other players.<br>Are you ready to participate?</p>
+                
+                <div class="yes-no-buttons">
+                    <button class="yes-no-btn yes-btn" onclick="answerParticipation(true)">Yes, I'm Ready</button>
+                    <button class="yes-no-btn no-btn" onclick="answerParticipation(false)">No, Thank You</button>
+                </div>
+            </div>
+
+            <div class="result-screen" id="resultScreen">
+                <div class="photo-strip left" id="leftPhotoStrip">
+                    <img src="https://placehold.co/300x400/000000/ffffff?text=Dynasty" alt="House Photo 1">
+                    <img src="https://placehold.co/300x400/000000/ffffff?text=Dynasty" alt="House Photo 2">
+                </div>
+                <div class="house-result">
+                    <p class="house-reveal">Your House Awaits</p>
+                    <div class="house-name" id="houseName"></div>
+                    <div class="house-motto" id="houseMotto"></div>
+                    
+                    <div class="mobile-photo-grid" id="mobilePhotoGrid">
+                        <img src="https://placehold.co/300x400/000000/ffffff?text=Dynasty" alt="House Photo 1">
+                        <img src="https://placehold.co/300x400/000000/ffffff?text=Dynasty" alt="House Photo 2">
+                        <img src="https://placehold.co/300x400/000000/ffffff?text=Dynasty" alt="House Photo 3">
+                        <img src="https://placehold.co/300x400/000000/ffffff?text=Dynasty" alt="House Photo 4">
+                    </div>
+                    
+                    <div class="house-description" id="houseDescription"></div>
+                    <div class="house-traits" id="houseTraits"></div>
+                    <div class="status-message" id="statusMessage"></div>
+                </div>
+                <div class="photo-strip right" id="rightPhotoStrip">
+                    <img src="https://placehold.co/300x400/000000/ffffff?text=Dynasty" alt="House Photo 3">
+                    <img src="https://placehold.co/300x400/000000/ffffff?text=Dynasty" alt="House Photo 4">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ====== GOOGLE SHEETS CONFIGURATION ======
+        // REPLACE THIS URL with your *NEW* Google Apps Script Web App URL
+        const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwmNJCuX3u3TxXAGO_WyZrU19_vgs-ofTB67aJWlxQj81RLhfXsbL7D9bnm7H55wqrR/exec';
+        
+        // ==========================================
+
+        const questions = [
+            {
+                question: "You're planning to attend a K-pop idol's fan meeting. How do you prepare?",
+                options: [
+                    { text: "Wear something bold and eye-catching, and work my charm to get closer to the front", house: "carmine" },
+                    { text: "Dress classy and sophisticated, maybe use some connections to score better seats", house: "dorada" },
+                    { text: "Wear something practical and dark, and find a clever way to upgrade my spot", house: "eclipse" }
+                ]
+            },
+            {
+                question: "Your favorite K-pop group is facing a scandal. How do you respond as a fan?",
+                options: [
+                    { text: "Jump on social media to defend them loudly and get others fired up", house: "dorada" },
+                    { text: "Reach out to fellow kpopers in the fandom to quietly spread a positive messages", house: "carmine" },
+                    { text: "Do some digging online to find the real facts before taking sides", house: "eclipse" }
+                ]
+            },
+            {
+                question: "You're organizing a K-pop dance cover event. What's your promoting style?",
+                options: [
+                    { text: "Get everyone hyped by making tiktok trends, make it fun and exciting", house: "carmine" },
+                    { text: "Keep things organized and respectful, stick to proven methods that work", house: "dorada" },
+                    { text: "Plan everything efficiently using apps and schedules, optimize the whole process", house: "eclipse" }
+                ]
+            },
+            {
+                question: "At a K-pop concert, you spot a another fan has already taken your seat. What do you do?",
+                options: [
+                    { text: "Talk to them confidently and persuade them to move somewhere else", house: "carmine" },
+                    { text: "Politely but firmly remind them about the rules and proper concert etiquette", house: "dorada" },
+                    { text: "Alert a security personal and try to avoid any direct contact with the fan", house: "eclipse" }
+                ]
+            },
+            {
+                question: "You're collecting K-pop merch. How do you acquire rare items?",
+                options: [
+                    { text: "Bid boldly at auctions and negotiate deals with confidence", house: "carmine" },
+                    { text: "Trade with trusted friends or tap into established collector networks", house: "dorada" },
+                    { text: "Hunt online marketplaces and use smart tools to find the best deals", house: "eclipse" }
+                ]
+            },
+            {
+                question: "Your K-pop bias announces a comeback. How do you promote it?",
+                options: [
+                    { text: "Make eye-catching posts and videos that grab people's attention", house: "carmine" },
+                    { text: "Organize nice fan events and work with established fan communities", house: "dorada" },
+                    { text: "Use social media algorithms and trending hashtags strategically", house: "eclipse" }
+                ]
+            },
+            {
+                question: "In a K-pop role-play game, you're assigned a mission. How do you complete it?",
+                options: [
+                    { text: "Go in with confidence and charm, adapt on the fly", house: "carmine" },
+                    { text: "Rely on tried-and-true methods and work with allies", house: "dorada" },
+                    { text: "Plan carefully and execute with precision", house: "eclipse" }
+                ]
+            },
+            {
+                question: "You're styling for a K-pop themed party. What vibe do you go for?",
+                options: [
+                    { text: "Bold and sexy - red outfits with sharp, confident looks", house: "carmine" },
+                    { text: "Elegant and classy - beige and gold with sophisticated vibes", house: "dorada" },
+                    { text: "Edgy streetwear - black with silver accents and modern style", house: "eclipse" }
+                ]
+            },
+            {
+                question: "A K-pop collaboration falls apart. How do you fix it?",
+                options: [
+                    { text: "Talk to everyone involved and use my charm to smooth things over", house: "carmine" },
+                    { text: "Remind people of their commitments and rebuild trust through loyalty", house: "dorada" },
+                    { text: "Figure out what went wrong and come up with a new game plan", house: "eclipse" }
+                ]
+            },
+            {
+                question: "You're leading a K-pop fan club. What's your signature mark?",
+                options: [
+                    { text: "A red rose - bold, beautiful, and memorable", house: "carmine" },
+                    { text: "A gold pin - representing loyalty and lasting connections", house: "dorada" },
+                    { text: "A black eclipse symbol - mysterious and unified", house: "eclipse" }
+                ]
+            }
+        ];
+
+        // House data moved to global scope
+        const houseData = {
+            carmine: {
+                name: 'The Carmine Circle',
+                motto: 'Seize. Conquer. Reign.',
+                description: 'You possess the passionate fire and ruthless ambition of The Carmine Circle. Like a crimson rose, you combine dangerous beauty with lethal precision. Your charm draws others in, but your determination to conquer and reign supreme drives your every move. In the K-pop world, you would dominate through sheer force of personality and unwavering confidence. You are destined to rule from a throne of velvet and blood.',
+                traits: ['Passionate', 'Seductive', 'Powerful', 'Ruthless', 'Charismatic'],
+                images: [
+                    'https://placehold.co/300x400/8b0000/f4e4d4?text=Placeholder',
+                    'https://placehold.co/300x400/dc143c/f4e4d4?text=Placeholder',
+                    'https://placehold.co/300x400/0a0a0a/dc143c?text=Placeholder',
+                    'https://placehold.co/300x400/5a0000/ffffff?text=Placeholder'
+                ]
+            },
+            dorada: {
+                name: 'La Familia Dorada',
+                motto: 'In Aurea Fide Manemus - In Golden Faith We Remain',
+                description: 'You embody the timeless elegance and quiet power of La Familia Dorada. With roots deep in tradition and honor, you command respect through wisdom and legacy rather than force. Your approach to the K-pop industry would be one of building dynasties, nurturing loyalty, and maintaining power through generations of carefully cultivated relationships. Gold runs through your veins, and eternity bends to your will.',
+                traits: ['Elegant', 'Honorable', 'Wise', 'Traditional', 'Regal'],
+                images: [
+                    'https://placehold.co/300x400/c9a961/0a0a0a?text=Placeholder',
+                    'https://placehold.co/300x400/f4e4d4/8b7355?text=Placeholder',
+                    'https://placehold.co/300x400/8b7355/f4e4d4?text=Placeholder',
+                    'https://placehold.co/300x400/a18a59/000000?text=Placeholder'
+                ]
+            },
+            eclipse: {
+                name: 'The Eclipse Crew',
+                motto: '暗夜行 (Àn Yè Xíng) - Walk in Darkness',
+                description: 'You operate with the calculated precision and technological edge of The Eclipse Crew. Moving through shadows with cutting-edge innovation, you represent the new generation of power. In the K-pop realm, you would revolutionize the industry through digital mastery, underground influence, and the ability to strike from the darkness when least expected. The future belongs to those who embrace the void.',
+                traits: ['Tech-Savvy', 'Stealthy', 'Innovative', 'Calculated', 'Rebellious'],
+                images: [
+                    'https://placehold.co/300x400/c0c0c0/0a0a0a?text=Placeholder',
+                    'https://placehold.co/300x400/0a0a0a/e8e8e8?text=Placeholder',
+                    'https://placehold.co/300x400/808080/f4e4d4?text=Placeholder',
+                    'https://placehold.co/300x400/333333/ffffff?text=Placeholder'
+                ]
+            }
+        };
+
+        let currentQuestion = 0;
+        let scores = { carmine: 0, dorada: 0, eclipse: 0 };
+        let registrationNumber = '';
+        let willParticipate = null;
+
+        function toRoman(num) {
+            const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+            return romanNumerals[num - 1] || num.toString();
+        }
+
+        function showRegistration() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('registrationScreen').style.display = 'block';
+        }
+
+        async function startQuiz() {
+            const regInput = document.getElementById('regNumber');
+            const regValue = regInput.value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+            const continueBtn = document.getElementById('continueBtn');
+            
+            if (!regValue) {
+                errorMessage.textContent = 'Please enter a valid registration number';
+                errorMessage.style.display = 'block';
+                regInput.focus();
+                return;
+            }
+            
+            registrationNumber = regValue;
+            errorMessage.style.display = 'none';
+            continueBtn.disabled = true;
+            continueBtn.textContent = 'Checking...';
+
+            try {
+                // Check if registration number already exists
+                const response = await fetch(`${GOOGLE_SHEET_URL}?regNumber=${encodeURIComponent(registrationNumber)}`);
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const result = await response.json();
+
+                if (result.found) {
+                    // User found, show their previous result
+                    const houseKey = Object.keys(houseData).find(key => houseData[key].name === result.house);
+                    if (houseKey) {
+                        document.getElementById('registrationScreen').style.display = 'none';
+                        displayResult(houseKey, result.willParticipate === 'Yes', 'You have already completed the assessment.');
+                    } else {
+                        // Data mismatch, proceed to quiz
+                        console.warn('House name mismatch. Proceeding with quiz.');
+                        proceedToQuiz();
+                    }
+                } else {
+                    // User not found, proceed to quiz
+                    proceedToQuiz();
+                }
+
+            } catch (error) {
+                console.error('Error checking registration:', error);
+                errorMessage.textContent = 'Could not verify number. Check connection.';
+                errorMessage.style.display = 'block';
+            } finally {
+                continueBtn.disabled = false;
+                continueBtn.textContent = 'Continue to Assessment';
+            }
+        }
+
+        function proceedToQuiz() {
+            document.getElementById('registrationScreen').style.display = 'none';
+            document.getElementById('questionScreen').style.display = 'block';
+            currentQuestion = 0;
+            scores = { carmine: 0, dorada: 0, eclipse: 0 };
+            willParticipate = null; // Reset participation
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('questionNumber').textContent = `Question ${toRoman(currentQuestion + 1)} of ${toRoman(questions.length)}`;
+            document.getElementById('questionText').textContent = question.question;
+            
+            const progressPercent = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progressPercent + '%';
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            const displayOptions = [...question.options].sort(() => Math.random() - 0.5);
+            
+            displayOptions.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option.text;
+                optionDiv.onclick = () => selectOption(option.house);
+                
+                optionDiv.style.animationDelay = `${index * 0.1}s`;
+                optionDiv.style.animation = 'fadeIn 0.6s ease forwards';
+                optionDiv.style.opacity = '0';
+                
+                optionsContainer.appendChild(optionDiv);
+            });
+        }
+
+        function selectOption(house) {
+            scores[house]++;
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showParticipationQuestion();
+            }
+        }
+
+        function showParticipationQuestion() {
+            document.getElementById('questionScreen').style.display = 'none';
+            document.getElementById('participationScreen').style.display = 'block';
+        }
+
+        function answerParticipation(answer) {
+            willParticipate = answer;
+            calculateAndShowResult();
+        }
+
+        async function saveToGoogleSheets(data) {
+            try {
+                const response = await fetch(GOOGLE_SHEET_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                return true;
+            } catch (error) {
+                console.error('Error saving to Google Sheets:', error);
+                return false;
+            }
+        }
+
+        // New function to just display the result
+        function displayResult(houseKey, participationStatus, statusMsg) {
+            document.getElementById('questionScreen').style.display = 'none';
+            document.getElementById('participationScreen').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'flex';
+            
+            document.getElementById('resultScreen').className = `result-screen ${houseKey}-theme`;
+            
+            const data = houseData[houseKey];
+            
+            const leftImages = document.querySelectorAll('#leftPhotoStrip img');
+            const rightImages = document.querySelectorAll('#rightPhotoStrip img');
+            const mobileImages = document.querySelectorAll('#mobilePhotoGrid img');
+            
+            if(data.images && data.images.length >= 4) {
+                leftImages[0].src = data.images[0];
+                leftImages[1].src = data.images[1];
+                rightImages[0].src = data.images[2];
+                rightImages[1].src = data.images[3];
+                
+                mobileImages[0].src = data.images[0];
+                mobileImages[1].src = data.images[1];
+                mobileImages[2].src = data.images[2];
+                mobileImages[3].src = data.images[3];
+            }
+
+            document.getElementById('houseName').textContent = data.name;
+            document.getElementById('houseName').className = 'house-name ' + houseKey;
+            document.getElementById('houseMotto').textContent = data.motto;
+            document.getElementById('houseDescription').textContent = data.description;
+            
+            const traitsContainer = document.getElementById('houseTraits');
+            traitsContainer.innerHTML = '';
+            data.traits.forEach((trait, index) => {
+                const traitDiv = document.createElement('div');
+                traitDiv.className = 'trait';
+                traitDiv.textContent = trait;
+                traitDiv.style.animationDelay = `${index * 0.1}s`;
+                traitDiv.style.animation = 'fadeIn 0.6s ease forwards';
+                traitDiv.style.opacity = '0';
+                traitsContainer.appendChild(traitDiv);
+            });
+            
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.textContent = statusMsg;
+        }
+
+        // Renamed from showResult()
+        async function calculateAndShowResult() {
+            // 1. Calculate the result
+            let maxScore = Math.max(scores.carmine, scores.dorada, scores.eclipse);
+            let house = '';
+            
+            const winners = [];
+            if (scores.carmine === maxScore) winners.push('carmine');
+            if (scores.dorada === maxScore) winners.push('dorada');
+            if (scores.eclipse === maxScore) winners.push('eclipse');
+            
+            house = winners[Math.floor(Math.random() * winners.length)];
+            
+            // 2. Display the result
+            displayResult(house, willParticipate, 'Saving your result...');
+
+            // 3. Save to Google Sheets
+            const data = houseData[house];
+            const sheetData = {
+                registrationNumber: registrationNumber,
+                house: data.name,
+                willParticipate: willParticipate ? 'Yes' : 'No',
+                timestamp: new Date().toISOString()
+            };
+            
+            const saved = await saveToGoogleSheets(sheetData);
+            
+            const statusMessage = document.getElementById('statusMessage');
+            if (saved) {
+                statusMessage.textContent = 'Your result has been recorded.';
+            } else {
+                statusMessage.textContent = 'Result saved locally. (Check Google Sheets configuration if needed)';
+            }
+        }
+
+        function restartQuiz() {
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('resultScreen').className = 'result-screen';
+            document.getElementById('startScreen').style.display = 'block';
+            document.getElementById('regNumber').value = '';
+            registrationNumber = '';
+            willParticipate = null;
+        }
+    </script>
+</body>
+</html>
