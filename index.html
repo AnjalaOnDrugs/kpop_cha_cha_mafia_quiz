@@ -1526,7 +1526,7 @@
             const totalEntries = houseCounts.total; // Get total entries fetched during reg check
 
             // Normal scoring logic for first 150 entries
-            if (totalEntries < 150) {
+            if (totalEntries < 15) {
                 let maxScore = Math.max(scores.carmine, scores.dorada, scores.eclipse);
                 const winners = [];
                 if (scores.carmine === maxScore) winners.push('carmine');
